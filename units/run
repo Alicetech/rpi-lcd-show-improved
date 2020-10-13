@@ -26,9 +26,10 @@ function testForErrors {
     test "$@" "/boot/config.txt edit for dtoverlay" $@
 }
 
-SCRIPTPATH=/dev/null "${SCRIPTPATH}/../install" tft35a
-testForErrors "online"
-
+if [ -f ${SCRIPTPATH}/../install ]; then
+    SCRIPTPATH=/dev/null "${SCRIPTPATH}/../install" tft35a
+    testForErrors "online"
+fi
 "${SCRIPTPATH}/../install" tft35a
 testForErrors  "offline"
 
