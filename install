@@ -1,16 +1,15 @@
 #!/bin/bash
 
-SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+SCRIPTPATH=${SCRIPTPATH:-"$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"}
 
 function die {
     echo >&2 "$@"
     exit 1
 }
 
-
 function setconfigvar {
-    egrep -i  "${1}\s*=${2}" "${4}" 2>&1 >/dev/null || ( \
-    egrep -i  "${1}\s*=" "${4}" \
+    egrep --silent -i "${1}\s*=${2}" "${4}" || ( \
+    egrep --silent -i "${1}\s*=" "${4}" \
         && sed -i -E "s/(${1})\s*=.*/${1}=${2}/" "${4}" \
         ||  sed  -i -E "s/(${3})/\1\n${1}=${2}/" "${4}" )
 }

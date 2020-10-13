@@ -7,15 +7,33 @@ mkdir -p ${path_root}/boot/overlays
 
 cat "${SCRIPTPATH}/config.txt" > "${path_root}/boot/config.txt"
 
+exitcode=0
+
+function test {
+    if [ $? -eq 0 ]; then
+        echo -e "\e[32m[PASS]\e[0m""[$1]" "${@:2}"
+    else
+        echo -e "\e[31m[FAIL]\e[0m""[$1]" "${@:2}"
+        exitcode=1
+    fi
+}
+
+function testForErrors {
+    file "${path_root}/boot/overlays"/* | grep --silent "boot CPU=0"
+    test "$@" "Overlay installed into /boot/overlays/" 
+
+    diff -u "${SCRIPTPATH}/config.txt" "${path_root}/boot/config.txt" |  grep --silent "+dtoverlay=tft35a"
+    test "$@" "/boot/config.txt edit for dtoverlay" $@
+}
+
+SCRIPTPATH=/dev/null "${SCRIPTPATH}/../install" tft35a
+testForErrors "online"
+
 "${SCRIPTPATH}/../install" tft35a
+testForErrors  "offline"
 
-echo ==================================
-echo == TEST FINISHED
-echo ==================================
-echo 
-
-diff -u config.txt "${path_root}/boot/config.txt"
-
-find "${path_root}" -exec file {} \;
+# find "${path_root}" -exec file {} \;
 
 rm -r "${path_root}"
+
+[ ${exitcode} -eq 0 ] || exit ${exitcode}
