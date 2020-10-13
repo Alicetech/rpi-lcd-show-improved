@@ -1,0 +1,21 @@
+disable_overscan=1
+start_x=0
+gpu_mem=160
+
+# Enable on-board audio
+dtparam=audio=on
+
+# Berryboot settings, do not change
+initramfs bbloader.img
+
+kernel=kernel_rpi0123_aufs.img
+
+[pi3]
+# Uncomment this line before installation if you want to enable USB boot
+#program_usb_boot_mode=1
+
+# Uncomment this line to prevent continuous SD card polling if using USB/PXE boot
+#dtoverlay=sdtweak,poll_once
+
+[all]
+

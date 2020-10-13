@@ -1,0 +1,29 @@
+#!/bin/bash
+
+source_url=${source_url:-"https://raw.githubusercontent.com/goodtft/LCD-show/master/usr"}
+source_url_cat=${source_url_cat:-"curl -s ${source_url}"}
+
+path_root=${path_root:-""}
+
+path_root_boot=${path_root_boot:-"${path_root}/boot"}
+path_root_boot_config_txt=${path_root_boot_config_txt:-"${path_root_boot}/config.txt"}
+
+path_root_boot_overlays=${path_root_boot_overlays:-"${path_root}/overlays"}
+
+
+function setconfigvar {
+    egrep -i  "${1}\s*=${2}" "${4}" 2>&1 >/dev/null || ( \
+    egrep -i  "${1}\s*=" "${4}" \
+        && sed -i -E "s/(${1})\s*=.*/${1}=${2}/" "${4}" \
+        ||  sed  -i -E "s/(${3})/\1\n${1}=${2}/" "${4}" )
+}
+
+# Install required overlay
+${source_url_cat}/tft35a-overlay.dtb | install -m 755 /dev/stdin ${path_root_boot_overlays}/tft35a.dtbo
+
+# Add options to config.txt
+setconfigvar "hdmi_force_hotplug" "1" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
+setconfigvar "dtparam=i2c_arm" "on" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
+setconfigvar "dtparam=spi" "on" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
+setconfigvar "enable_uart" "1" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
+setconfigvar "dtoverlay=tft35a:rotate" "90" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
