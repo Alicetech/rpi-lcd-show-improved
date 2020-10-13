@@ -1,0 +1,51 @@
+#!/bin/bash
+
+SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
+function die {
+    echo >&2 "$@"
+    exit 1
+}
+
+
+function setconfigvar {
+    egrep -i  "${1}\s*=${2}" "${4}" 2>&1 >/dev/null || ( \
+    egrep -i  "${1}\s*=" "${4}" \
+        && sed -i -E "s/(${1})\s*=.*/${1}=${2}/" "${4}" \
+        ||  sed  -i -E "s/(${3})/\1\n${1}=${2}/" "${4}" )
+}
+
+function install_or_fallback {
+    if [ -f "${SCRIPTPATH}/${@:(-2):1}" ]; then
+        install -m 755 "${SCRIPTPATH}/${@:(-2):1}" "${@:(-1):1}"
+    else
+        curl -s "${source_url}/${@:(-2):1}" | install -m 755 /dev/stdin "${@:(-1):1}"
+    fi
+}
+
+[ "$#" -eq 1 ] || die "Error! Usage: install [screen_type]. Example: install tft35a"
+
+overlays_name=$1
+
+source_url=${source_url:-"https://raw.githubusercontent.com/Alicetech/rpi-lcd-show-improved/main"}
+
+path_root=${path_root:-""}
+
+path_root_boot=${path_root_boot:-"${path_root}/boot"}
+path_root_boot_config_txt=${path_root_boot_config_txt:-"${path_root_boot}/config.txt"}
+
+path_root_boot_overlays=${path_root_boot_overlays:-"${path_root}/boot/overlays"}
+
+
+overlays_file_in=${overlays_file_in:-"${overlays_name}-overlay.dtb"}
+overlays_file_out=${overlays_file_out:-"${overlays_name}.dtbo"}
+
+
+install_or_fallback -m 755 "dist/overlays/${overlays_file_in}" "${path_root_boot_overlays}/${overlays_file_out}"
+
+# Add options to config.txt
+setconfigvar "hdmi_force_hotplug" "1" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
+setconfigvar "dtparam=i2c_arm" "on" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
+setconfigvar "dtparam=spi" "on" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
+setconfigvar "enable_uart" "1" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
+setconfigvar "dtoverlay=tft35a:rotate" "90" "^(\[all\]\s*)" "${path_root_boot_config_txt}"

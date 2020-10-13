@@ -1,19 +1,21 @@
 #!/bin/bash
 
-temp_dir=$(mktemp --directory)
-export path_root_boot_config_txt="${temp_dir}/config.txt"
-export path_root_boot_overlays="${temp_dir}"
+SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+export path_root=$(mktemp --directory)
 
-cat config.txt > "${path_root_boot_config_txt}"
+mkdir -p ${path_root}/boot/overlays
 
-../LCD35-show
+cat "${SCRIPTPATH}/config.txt" > "${path_root}/boot/config.txt"
 
-echo ================================== 
-echo == HERE IS THE TEST OUTCOME:
-echo ==
+"${SCRIPTPATH}/../install" tft35a
+
+echo ==================================
+echo == TEST FINISHED
+echo ==================================
 echo 
 
-diff -u config.txt "${temp_dir}/config.txt"
+diff -u config.txt "${path_root}/boot/config.txt"
 
-ls -al "${temp_dir}"
-rm -r "${temp_dir}"
+find "${path_root}" -exec file {} \;
+
+rm -r "${path_root}"
