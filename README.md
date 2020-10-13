@@ -5,7 +5,7 @@
 curl -o- https://raw.githubusercontent.com/Alicetech/rpi-lcd-show-improved/main/install | sudo bash /dev/stdin tft35a
 ```
 
-# How to install 3.5in screen to SD card (before/after first boot):
+# How to install 3.5in screen to SD card (before/after first boot using debian/ubuntu host):
 ```
 curl -o- https://raw.githubusercontent.com/Alicetech/rpi-lcd-show-improved/main/install | path_root=/media/owner/rootfs path_root_boot=/media/owner/boot bash /dev/stdin tft35a
 ```
