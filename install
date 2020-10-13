@@ -33,7 +33,7 @@ path_root=${path_root:-""}
 path_root_boot=${path_root_boot:-"${path_root}/boot"}
 path_root_boot_config_txt=${path_root_boot_config_txt:-"${path_root_boot}/config.txt"}
 
-path_root_boot_overlays=${path_root_boot_overlays:-"${path_root}/boot/overlays"}
+path_root_boot_overlays=${path_root_boot_overlays:-"${path_root_boot}/overlays"}
 
 
 overlays_file_in=${overlays_file_in:-"${overlays_name}-overlay.dtb"}
