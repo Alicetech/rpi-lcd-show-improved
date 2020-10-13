@@ -27,11 +27,12 @@ function testForErrors {
 }
 
 if [ -f ${SCRIPTPATH}/../install ]; then
-    SCRIPTPATH=/dev/null "${SCRIPTPATH}/../install" tft35a
-    testForErrors "online"
+    "${SCRIPTPATH}/../install" tft35a
+    testForErrors  "offline"
 fi
-"${SCRIPTPATH}/../install" tft35a
-testForErrors  "offline"
+
+curl -o- https://raw.githubusercontent.com/Alicetech/rpi-lcd-show-improved/main/install | SCRIPTPATH=/dev/null sudo bash tft35a
+testForErrors "online"
 
 # find "${path_root}" -exec file {} \;
 
