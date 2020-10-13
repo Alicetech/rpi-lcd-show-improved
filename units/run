@@ -34,8 +34,8 @@ fi
 curl -o- https://raw.githubusercontent.com/Alicetech/rpi-lcd-show-improved/main/install | SCRIPTPATH=/dev/null bash /dev/stdin tft35a
 testForErrors "online"
 
-# find "${path_root}" -exec file {} \;
+# find "${path_root}" -exec file {} \; 
 
-rm -r "${path_root}"
+rm -r "${path_root}" 
 
 [ ${exitcode} -eq 0 ] || exit ${exitcode}
