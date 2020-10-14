@@ -4,7 +4,7 @@ This is a more stable design of the install scripts.  This project allows first 
 
 # The original repo has these issues
 The original LCD-show (https://github.com/goodtft/LCD-show) has too many issues:
-* You must have HDMI, TV or SSH. You must have network access. You cant use you screen, on first boot...
+* You must have HDMI, TV or SSH. You must have network access. You can't use you screen, on first boot...
 * Bricks new USB boot methods on Pi4
 * Bricks Berryboot (if you can't boot then you can't restore)
 * Forced reboot without warning! (Reboot your own device to stop lost work in progress)
