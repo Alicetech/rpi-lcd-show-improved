@@ -1,11 +1,31 @@
 #!/bin/bash
 
+########################################################################
+#
+#  Copyright [2005] - [2020] Alicetech and Adam Florizone
+#  All Rights Reserved.
+# 
+# NOTICE:  All information contained herein is, and remains
+# the property of Alicetech, Adam Florizone,
+# The intellectual and technical concepts contained
+# herein are proprietary to Alicetech and Adam Florizone
+# and may be covered by U.S. and Foreign Patents,
+# patents in process, and are protected by trade secret or copyright law.
+# Dissemination of this information or reproduction of this material
+# is strictly forbidden unless prior written permission is obtained
+# from Alicetech and Adam Florizone.
+#
+
+
 SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+DISTROTESTSOURCE="${SCRIPTPATH}/default_raspbian/"
+
 export path_root=$(mktemp --directory)
 
 mkdir -p ${path_root}/boot/overlays
 
-cat "${SCRIPTPATH}/config.txt" > "${path_root}/boot/config.txt"
+rsync -ravp "${DISTROTESTSOURCE}" "${path_root}/"
+ls -al "${path_root}/"
 
 exitcode=0
 
@@ -22,8 +42,13 @@ function testForErrors {
     file "${path_root}/boot/overlays"/* | grep --silent "boot CPU=0"
     test "$@" "Overlay installed into /boot/overlays/" 
 
-    diff -u "${SCRIPTPATH}/config.txt" "${path_root}/boot/config.txt" |  grep --silent "+dtoverlay=tft35a"
+    diff -u "${DISTROTESTSOURCE}/boot/config.txt" "${path_root}/boot/config.txt" |  grep --silent "+dtoverlay=tft35a"
     test "$@" "/boot/config.txt edit for dtoverlay" $@
+
+    diff -u "${DISTROTESTSOURCE}/boot/cmdline.txt" "${path_root}/boot/cmdline.txt" |  grep --silent "console=ttyAMA0,115200"
+    test "$@" "/boot/cmdline.txt edit for console=ttyAMA0,115200" $@
+    
+    cat "${path_root}/boot/cmdline.txt"
 }
 
 if [ -f ${SCRIPTPATH}/../install ]; then

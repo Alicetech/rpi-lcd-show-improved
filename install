@@ -1,5 +1,21 @@
 #!/bin/bash
 
+########################################################################
+#
+#  Copyright [2005] - [2020] Alicetech and Adam Florizone
+#  All Rights Reserved.
+# 
+# NOTICE:  All information contained herein is, and remains
+# the property of Alicetech, Adam Florizone,
+# The intellectual and technical concepts contained
+# herein are proprietary to Alicetech and Adam Florizone
+# and may be covered by U.S. and Foreign Patents,
+# patents in process, and are protected by trade secret or copyright law.
+# Dissemination of this information or reproduction of this material
+# is strictly forbidden unless prior written permission is obtained
+# from Alicetech and Adam Florizone.
+#
+
 SCRIPTPATH=${SCRIPTPATH:-"$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"}
 
 function die {
@@ -7,11 +23,18 @@ function die {
     exit 1
 }
 
-function setconfigvar {
+function setconfigvar {  # (1=var,2=val,3=orafter,4=file)
     egrep --silent -i "${1}\s*=${2}" "${4}" || ( \
     egrep --silent -i "${1}\s*=" "${4}" \
         && sed -i -E "s/(${1})\s*=.*/${1}=${2}/" "${4}" \
         ||  sed  -i -E "s/(${3})/\1\n${1}=${2}/" "${4}" )
+}
+
+function setconfigvarline { # (1=var,2=val,3=orafter,4=file)
+	egrep --silent -i  "${1}${2}" "${4}" || ( \
+	egrep --silent -i  "[^\s]${1}" "${4}" \
+		&& sed -i -E "s/[^\s](${1})[[:alnum:]_=-]*/ ${1}${2}/" "${4}" \
+		|| sed  -i -E "s/(${3})/\1 ${1}${2}/" "${4}" )
 }
 
 function install_or_fallback {
@@ -32,6 +55,7 @@ path_root=${path_root:-""}
 
 path_root_boot=${path_root_boot:-"${path_root}/boot"}
 path_root_boot_config_txt=${path_root_boot_config_txt:-"${path_root_boot}/config.txt"}
+path_root_boot_cmdline_txt=${path_root_boot_cmdline_txt:-"${path_root_boot}/cmdline.txt"}
 
 path_root_boot_overlays=${path_root_boot_overlays:-"${path_root_boot}/overlays"}
 
@@ -43,8 +67,26 @@ overlays_file_out=${overlays_file_out:-"${overlays_name}.dtbo"}
 install_or_fallback -m 755 "dist/overlays/${overlays_file_in}" "${path_root_boot_overlays}/${overlays_file_out}"
 
 # Add options to config.txt
-setconfigvar "hdmi_force_hotplug" "1" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
-setconfigvar "dtparam=i2c_arm" "on" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
-setconfigvar "dtparam=spi" "on" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
-setconfigvar "enable_uart" "1" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
 setconfigvar "dtoverlay=tft35a:rotate" "90" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
+setconfigvar "enable_uart" "1" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
+setconfigvar "dtparam=spi" "on" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
+setconfigvar "dtparam=i2c_arm" "on" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
+setconfigvar "hdmi_force_hotplug" "1" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
+
+# console=serial0,115200 to console=ttyAMA0,11520
+setconfigvarline "console=ttyAMA0," "115200" "deadline" "${path_root_boot_cmdline_txt}"
+
+setconfigvarline "fbcon=map:" "10" "deadline" "${path_root_boot_cmdline_txt}"
+setconfigvarline "fbcon=font:" "ProFont6x11" "deadline" "${path_root_boot_cmdline_txt}"
+
+# Obay init=/usr/lib/raspi-config/init_resize.sh
+
+# Default settings:
+# console=serial0,115200 console=tty1 root=PARTUUID=907af7d0-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet init=/usr/lib/raspi-config/init_resize.sh
+
+# After: what ttf35-show did:
+# console=ttyAMA0,115200 console=tty1 fbcon=map:10 fbcon=font:ProFont6x11
+
+# The heck is this stuff used?
+# dwc_otg.lpm_enable=0  // Why this?? turns off Link Power Management (LPM) in the dwc_otg driver; the dwc_otg driver is the driver for the USB controller built into the Raspberry Pi.
+# 
