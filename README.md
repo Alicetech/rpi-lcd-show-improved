@@ -13,15 +13,17 @@ The original repo has these issues:
 * Intsalls X11 in Rasbian Light (The distro that is console only... And people want it that way... Also touch screen shoud work as mouse since console support mice..)
 
 # This projects is in progress. Production usage is planed by Alicetech. This is supported and WIP:
--[x] Base raspbian works with console
--[ ] Test units show pass/fail
--[ ] Test units with physical camera and QR code on screen. 
--[ ] Test units with physical network SD with snaphots with a second system power cycler. VM wont work since we need pins.
--[ ] Base raspbian works with X11
--[ ] Berryboot works (post boot)
--[ ] Touch works in console
--[ ] Touch works in X11
--[ ] Kernal driver imbeded for full boot including Berryboot
+- [x] Base raspbian works with console
+- [ ] Test units show pass/fail
+- [ ] Test units with physical camera and QR code on screen. 
+- [ ] Test units with physical network SD with snaphots with a second system power cycler. VM wont work since we need pins.
+- [ ] Base raspbian works with X11
+- [ ] Berryboot works (post boot)
+- [ ] Touch works in console
+- [ ] Touch works in X11
+- [ ] Kernal driver imbeded for full boot including Berryboot
+- [ ] Install script to system bin for root with rotate option
+- [ ] Multi screen support for VR
 
 # How to install 3.5in screen:
 ```
