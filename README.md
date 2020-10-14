@@ -17,6 +17,7 @@ The original repo has these issues:
 - [ ] Test units show pass/fail
 - [ ] Test units with physical camera and QR code on screen. 
 - [ ] Test units with physical network SD with snaphots with a second system power cycler. VM wont work since we need pins.
+- [ ] Test units with more physical screens (This project is open source and we need donations)
 - [ ] Base raspbian works with X11
 - [ ] Berryboot works (post boot)
 - [ ] Touch works in console
@@ -24,11 +25,13 @@ The original repo has these issues:
 - [ ] Kernal driver imbeded for full boot including Berryboot
 - [ ] Install script to system bin for root with rotate option
 - [ ] Multi screen support for VR
+- [ ] Add support for and test bcm2709-rpi-2-b bcm2710-rpi-3-b qddpi24.dtb
 
 # How to install 3.5in screen:
 ```
 curl -o- https://raw.githubusercontent.com/Alicetech/rpi-lcd-show-improved/main/install | sudo bash /dev/stdin tft35a
 ```
+You can change "tft35a" to one of the following: mhs24, mhs32, mhs35, mhs35b, mhs395, mis35, tft35a, tft9341
 
 # How to install 3.5in screen to SD card (before/after first boot using debian/ubuntu host):
 ```
