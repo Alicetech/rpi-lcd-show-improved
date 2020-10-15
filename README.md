@@ -16,13 +16,13 @@ The original LCD-show (https://github.com/goodtft/LCD-show) has too many issues:
 
 # This projects is in progress. Production usage is planed by Alicetech. This is supported and WIP:
 - [x] Base raspbian works with console
+- [x] Berryboot works (default boot only, no config screen)
 - [ ] Test automated units show pass/fail
 - [ ] Test automated units with physical camera and QR code on screen. 
 - [ ] Test automated units with physical network SD with snaphots with a second system power cycler. VM wont work since we need pins.
 - [ ] Test automated units with more physical screens (This project is open source and we need donations)
 - [ ] Test automated units for touch screen using matrix relay
 - [ ] Base raspbian works with X11
-- [ ] Berryboot works (post boot)
 - [ ] Touch works in console via gpm
 - [ ] Touch works in X11
 - [ ] Kernal driver imbeded for full boot including Berryboot
