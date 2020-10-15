@@ -20,7 +20,7 @@ The original LCD-show (https://github.com/goodtft/LCD-show) has too many issues:
 - [ ] Test automated units with physical camera and QR code on screen. 
 - [ ] Test automated units with physical network SD with snaphots with a second system power cycler. VM wont work since we need pins.
 - [ ] Test automated units with more physical screens (This project is open source and we need donations)
-- [ ] Test automated units for touch screen
+- [ ] Test automated units for touch screen using matrix relay
 - [ ] Base raspbian works with X11
 - [ ] Berryboot works (post boot)
 - [ ] Touch works in console via gpm
