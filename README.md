@@ -12,7 +12,7 @@ The original LCD-show (https://github.com/goodtft/LCD-show) has too many issues:
 * Hijacks/delets your config.txt
 * Hijacks/delets your cmdline.txt
 * Messes up your APT depends...
-* Intsalls X11 in Rasbian Light (The distro that is console only... And people want it that way... Also touch screen shoud work as mouse since console support mice..)
+* Installs X11 in Rasbian Light (The distro that is console only... And people want it that way... Also touch screen shoud work as mouse since console support mice..)
 
 # This projects is in progress. Production usage is planed by Alicetech. This is supported and WIP:
 - [x] Base raspbian works with console
