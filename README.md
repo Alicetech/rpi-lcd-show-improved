@@ -12,17 +12,18 @@ The original LCD-show (https://github.com/goodtft/LCD-show) has too many issues:
 * Hijacks/delets your config.txt
 * Hijacks/delets your cmdline.txt
 * Messes up your APT depends...
-* Installs X11 in Rasbian Light (The distro that is console only... And people want it that way... Also touch screen shoud work as mouse since console support mice..)
+* Installs X11 in Rasbian Light (The distro that is console only... And people want it that way... Also touch screen shoud work as mouse since console support mice..). See gpm.
 
 # This projects is in progress. Production usage is planed by Alicetech. This is supported and WIP:
 - [x] Base raspbian works with console
-- [ ] Test units show pass/fail
-- [ ] Test units with physical camera and QR code on screen. 
-- [ ] Test units with physical network SD with snaphots with a second system power cycler. VM wont work since we need pins.
-- [ ] Test units with more physical screens (This project is open source and we need donations)
+- [ ] Test automated units show pass/fail
+- [ ] Test automated units with physical camera and QR code on screen. 
+- [ ] Test automated units with physical network SD with snaphots with a second system power cycler. VM wont work since we need pins.
+- [ ] Test automated units with more physical screens (This project is open source and we need donations)
+- [ ] Test automated units for touch screen
 - [ ] Base raspbian works with X11
 - [ ] Berryboot works (post boot)
-- [ ] Touch works in console
+- [ ] Touch works in console via gpm
 - [ ] Touch works in X11
 - [ ] Kernal driver imbeded for full boot including Berryboot
 - [ ] Install script to system bin for root with rotate option
