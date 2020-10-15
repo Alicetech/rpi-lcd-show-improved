@@ -67,6 +67,10 @@ overlays_file_out=${overlays_file_out:-"${overlays_name}.dtbo"}
 install_or_fallback -m 755 "dist/overlays/${overlays_file_in}" "${path_root_boot_overlays}/${overlays_file_out}"
 
 # Add options to config.txt
+
+# incase [all] is missing (default berryboot) make sure append it to end of file
+grep --silent "^\[all\]" "${path_root_boot_config_txt}" || echo "[all]\n" >> "${path_root_boot_config_txt}"
+
 setconfigvar "dtoverlay=tft35a:rotate" "90" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
 setconfigvar "enable_uart" "1" "^(\[all\]\s*)" "${path_root_boot_config_txt}"
 setconfigvar "dtparam=spi" "on" "^(\[all\]\s*)" "${path_root_boot_config_txt}"

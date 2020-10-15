@@ -18,49 +18,64 @@
 
 
 SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-DISTROTESTSOURCE="${SCRIPTPATH}/default_raspbian/"
-
-export path_root=$(mktemp --directory)
-
-mkdir -p ${path_root}/boot/overlays
-
-rsync -ravp "${DISTROTESTSOURCE}" "${path_root}/"
-ls -al "${path_root}/"
 
 exitcode=0
 
-function test {
-    if [ $? -eq 0 ]; then
-        echo -e "\e[32m[PASS]\e[0m""[$1]" "${@:2}"
-    else
-        echo -e "\e[31m[FAIL]\e[0m""[$1]" "${@:2}"
-        exitcode=1
+function runTest {
+    DISTROTESTSOURCE="${SCRIPTPATH}/$1"
+
+    export path_root=$(mktemp --directory)
+
+    function test {
+        if [ $? -eq 0 ]; then
+            echo -e "\e[32m[PASS]\e[0m""[$1]" "${@:2}"
+        else
+            echo -e "\e[31m[FAIL]\e[0m""[$1]" "${@:2}"
+            exitcode=1
+        fi
+    }
+
+    function testForErrors {
+        file "${path_root}/boot/overlays"/* | grep --silent "boot CPU=0"
+        test "$@" "Overlay installed into /boot/overlays/" 
+
+        diff -u "${DISTROTESTSOURCE}/boot/config.txt" "${path_root}/boot/config.txt" |  grep --silent "+dtoverlay=tft35a"
+        test "$@" "${DISTROTESTSOURCE}/boot/config.txt edit for dtoverlay" $@
+
+        diff -u "${DISTROTESTSOURCE}/boot/cmdline.txt" "${path_root}/boot/cmdline.txt" |  grep --silent "console=ttyAMA0,115200"
+        test "$@" "${DISTROTESTSOURCE}/boot/cmdline.txt edit for console=ttyAMA0,115200" $@
+        
+        cat "${path_root}/boot/cmdline.txt"
+    }
+
+    if [ -f ${SCRIPTPATH}/../install ]; then
+        mkdir -p ${path_root}/boot/overlays
+        rsync -ra "${DISTROTESTSOURCE}/" "${path_root}/"
+
+        "${SCRIPTPATH}/../install" tft35a
+        testForErrors  "offline"
+
+        rm -r "${path_root}"
     fi
+
+    mkdir -p ${path_root}/boot/overlays
+    rsync -ra "${DISTROTESTSOURCE}/" "${path_root}/"
+
+    curl -o- https://raw.githubusercontent.com/Alicetech/rpi-lcd-show-improved/main/install | SCRIPTPATH=/dev/null bash /dev/stdin tft35a
+    testForErrors "online"
+
+    rm -r "${path_root}"
 }
 
-function testForErrors {
-    file "${path_root}/boot/overlays"/* | grep --silent "boot CPU=0"
-    test "$@" "Overlay installed into /boot/overlays/" 
+runTest "default_raspbian"
+runTest "default_berryboot"
 
-    diff -u "${DISTROTESTSOURCE}/boot/config.txt" "${path_root}/boot/config.txt" |  grep --silent "+dtoverlay=tft35a"
-    test "$@" "/boot/config.txt edit for dtoverlay" $@
-
-    diff -u "${DISTROTESTSOURCE}/boot/cmdline.txt" "${path_root}/boot/cmdline.txt" |  grep --silent "console=ttyAMA0,115200"
-    test "$@" "/boot/cmdline.txt edit for console=ttyAMA0,115200" $@
-    
-    cat "${path_root}/boot/cmdline.txt"
-}
-
-if [ -f ${SCRIPTPATH}/../install ]; then
-    "${SCRIPTPATH}/../install" tft35a
-    testForErrors  "offline"
+if [ ${exitcode} -eq 0 ]; then
+    echo -e "\e[32m[ALL TESTS PASS]\e[0m" 
+else
+    echo -e "\e[31m[TEST(S) FAILED]\e[0m"
+    exitcode=1
 fi
 
-curl -o- https://raw.githubusercontent.com/Alicetech/rpi-lcd-show-improved/main/install | SCRIPTPATH=/dev/null bash /dev/stdin tft35a
-testForErrors "online"
-
-# find "${path_root}" -exec file {} \; 
-
-rm -r "${path_root}" 
-
 [ ${exitcode} -eq 0 ] || exit ${exitcode}
+
