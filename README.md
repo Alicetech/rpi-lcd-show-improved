@@ -1,4 +1,4 @@
-# Raspberry Pi improved pin connector LCD install
+# Raspberry Pi improved pin connected LCD install
 
 This is a more stable design of the install scripts.  This project allows first boot access. After you install your Pi image to SD or USB you can also install the driver without even booting you pi!
 
