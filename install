@@ -94,3 +94,5 @@ setconfigvarline "fbcon=font:" "ProFont6x11" "deadline" "${path_root_boot_cmdlin
 # The heck is this stuff used?
 # dwc_otg.lpm_enable=0  // Why this?? turns off Link Power Management (LPM) in the dwc_otg driver; the dwc_otg driver is the driver for the USB controller built into the Raspberry Pi.
 # 
+
+echo done!
