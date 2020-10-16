@@ -45,5 +45,6 @@ curl -o- https://raw.githubusercontent.com/Alicetech/rpi-lcd-show-improved/main/
 ```
 git clone https://github.com/Alicetech/rpi-lcd-show-improved.git
 cd rpi-lcd-show-improved
+chmod ./units/run
 ./units/run
 ```
