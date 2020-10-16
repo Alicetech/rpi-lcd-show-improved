@@ -8,9 +8,9 @@ The original LCD-show (https://github.com/goodtft/LCD-show) has too many issues:
 * Bricks new USB boot methods on Pi4
 * Bricks Berryboot (if you can't boot then you can't restore)
 * Forced reboot without warning! (Reboot your own device to stop lost work in progress)
-* Hijacks/delets your inittab
-* Hijacks/delets your config.txt
-* Hijacks/delets your cmdline.txt
+* Hijacks/deletes your inittab
+* Hijacks/deletes your config.txt
+* Hijacks/deletes your cmdline.txt
 * Messes up your APT depends...
 * Installs X11 in Rasbian Light (The distro that is console only... And people want it that way... Also touch screen shoud work as mouse since console support mice..). See gpm.
 
