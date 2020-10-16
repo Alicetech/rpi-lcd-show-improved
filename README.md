@@ -43,5 +43,7 @@ curl -o- https://raw.githubusercontent.com/Alicetech/rpi-lcd-show-improved/main/
 
 # How to run tests before bug report
 ```
-curl -o- https://raw.githubusercontent.com/Alicetech/rpi-lcd-show-improved/main/units/run | bash
+git clone https://github.com/Alicetech/rpi-lcd-show-improved.git
+cd rpi-lcd-show-improved
+./units/run
 ```
